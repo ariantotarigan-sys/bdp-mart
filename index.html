@@ -1,0 +1,1270 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BDP Mart - Snack & Minuman Sekolah</title>
+
+  <!-- Konfigurasi Tailwind untuk dark mode -->
+  <script>
+    tailwind = {
+      config: {
+        darkMode: 'class'
+      }
+    }
+  </script>
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Mode Print: hanya tampilkan area resi -->
+  <style>
+    @media print {
+      body * {
+        visibility: hidden;
+      }
+      #receiptInfo, #receiptInfo * {
+        visibility: visible;
+      }
+      #receiptInfo {
+        position: absolute;
+        inset: 0;
+        margin: 0;
+        width: 100%;
+        background: #ffffff;
+      }
+    }
+  </style>
+</head>
+<body class="bg-gray-50 text-gray-800 dark:bg-slate-900 dark:text-slate-100">
+
+  <!-- Navbar / Header -->
+  <header class="bg-emerald-700 text-white dark:bg-slate-950">
+    <div class="max-w-6xl mx-auto flex items-center justify-between px-4 py-3">
+      <div class="flex items-center gap-2">
+        <!-- Logo -->
+        <img src="images/logo.png" alt="Logo BDP Mart"
+             class="w-12 h-12 rounded-full object-cover hidden sm:block">
+        <div class="flex flex-col">
+          <span class="font-extrabold text-xl">BDP Mart</span>
+          <span class="text-xs bg-white/20 px-2 py-1 rounded-full">
+            SMK Taruna Pekanbaru
+          </span>
+        </div>
+      </div>
+      <nav class="hidden md:flex gap-4 text-sm">
+        <a href="#status-buka" class="hover:underline">Status Buka</a>
+        <a href="#produk" class="hover:underline">Produk</a>
+        <a href="#cara-pesan" class="hover:underline">Cara Pesan</a>
+        <a href="#pembayaran" class="hover:underline">Pembayaran</a>
+        <a href="#riwayat" class="hover:underline">Riwayat</a>
+        <a href="#keamanan" class="hover:underline">Keamanan</a>
+        <a href="#kontak" class="hover:underline">Kontak</a>
+      </nav>
+
+      <div class="flex items-center gap-2">
+        <!-- Dark mode toggle -->
+        <button id="themeToggle"
+                class="bg-white/10 text-white text-lg px-2 py-1 rounded-full border border-white/30 hover:bg-white/20"
+                title="Toggle Dark Mode">
+          🌙
+        </button>
+
+        <!-- Tombol Cart -->
+        <button id="cartButton"
+                class="ml-1 bg-white text-emerald-700 text-sm font-semibold px-3 py-2 rounded-full flex items-center gap-2 shadow hover:bg-lime-100">
+          🛒
+          <span>Keranjang</span>
+          <span class="bg-emerald-700 text-white rounded-full px-2 text-xs" id="cartCount">0</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero Section -->
+  <section class="bg-emerald-700 text-white dark:bg-emerald-800 py-16 md:py-20">
+    <div class="max-w-6xl mx-auto px-4 grid md:grid-cols-2 gap-10 items-center">
+      <div>
+        <h1 class="text-3xl md:text-5xl font-extrabold mb-4 leading-tight">
+          BDP Mart<br/>
+          <span class="text-lime-300">Snack & Minuman Favorit Siswa</span>
+        </h1>
+        <p class="text-sm md:text-base mb-6">
+          Belanja jajanan sekolah jadi lebih mudah!  
+          Pesan secara online, bayar via Saweria, lalu ambil atau diantar ke kelas saat jam operasional sekolah.
+        </p>
+        <div class="flex flex-wrap gap-3">
+          <a href="#produk"
+             class="bg-white text-emerald-700 font-semibold px-6 py-3 rounded shadow hover:bg-lime-100">
+            Lihat Daftar Snack
+          </a>
+          <a href="#pembayaran"
+             class="border border-white text-white font-semibold px-6 py-3 rounded hover:bg-white/10">
+            Bayar via Saweria
+          </a>
+        </div>
+        <p class="mt-4 text-xs text-emerald-100">
+          *Khusus untuk warga SMK Taruna Pekanbaru.
+        </p>
+      </div>
+      <div class="hidden md:block">
+        <div class="bg-white/10 backdrop-blur rounded-3xl p-6 shadow-lg">
+          <h3 class="font-semibold mb-2">Promo Hari Ini</h3>
+          <ul class="text-sm space-y-1">
+            <li>🍟 Paket Hemat 1: Kentang + Teh Manis Cup</li>
+            <li>🧃 Beli 2 Minuman Kotak, Gratis 1 permen</li>
+            <li>🍫 Diskon 10% untuk pembelian ≥ Rp 20.000</li>
+          </ul>
+          <p class="mt-4 text-xs text-emerald-100">
+            Tunjukkan bukti pembayaran Saweria ke kasir BDP Mart saat pengambilan.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Status Operasional & Countdown -->
+  <section id="status-buka" class="py-10 bg-emerald-50 dark:bg-slate-900 border-b border-emerald-100/60 dark:border-slate-700">
+    <div class="max-w-5xl mx-auto px-4 grid md:grid-cols-2 gap-6 items-center">
+      <div>
+        <h2 class="text-2xl font-bold mb-2">Status Operasional BDP Mart</h2>
+        <p class="text-sm text-gray-700 dark:text-slate-200 mb-3">
+          BDP Mart melayani pemesanan dan pengambilan pesanan pada jam operasional sekolah:
+        </p>
+        <ul class="text-sm text-gray-700 dark:text-slate-200 mb-3 list-disc list-inside">
+          <li>Hari: Senin – Jumat (hari sekolah)</li>
+          <li>Jam: 07.00 – 16.00 WIB</li>
+        </ul>
+        <p class="text-xs text-gray-500 dark:text-slate-400">
+          Di luar hari dan jam tersebut, BDP Mart dianggap tutup dan sistem akan menampilkan hitung mundur
+          menuju jam buka berikutnya.
+        </p>
+      </div>
+      <div class="bg-white dark:bg-slate-800 rounded-2xl p-5 shadow-sm">
+        <p class="text-sm text-gray-500 dark:text-slate-300 mb-1">Status saat ini:</p>
+        <p id="statusText" class="text-lg font-bold mb-2 text-emerald-700 dark:text-lime-300">
+          Menghitung status...
+        </p>
+        <p class="text-sm text-gray-500 dark:text-slate-300 mb-1">Hitung mundur:</p>
+        <p id="countdownText" class="text-xl font-mono font-semibold text-gray-800 dark:text-slate-100">
+          --:--:--
+        </p>
+        <p id="countdownNote" class="text-xs text-gray-500 dark:text-slate-400 mt-2">
+          Sistem akan menampilkan hitung mundur menuju jam buka atau jam tutup terdekat pada hari sekolah (Senin–Jumat).
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Produk Section -->
+  <section id="produk" class="py-14 bg-white dark:bg-slate-900">
+    <div class="max-w-6xl mx-auto px-4">
+      <h2 class="text-3xl font-bold text-center mb-2">Daftar Snack & Minuman</h2>
+      <p class="text-center text-sm text-gray-600 dark:text-slate-300 mb-6">
+        Contoh daftar produk di BDP Mart. Harga dan stok dapat disesuaikan dengan kondisi nyata.
+      </p>
+
+      <!-- Search & Filter -->
+      <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 mb-8">
+        <div class="flex-1">
+          <input
+            id="searchInput"
+            type="text"
+            placeholder="Cari snack atau minuman..."
+            class="w-full border border-gray-300 dark:border-slate-600 dark:bg-slate-800 dark:text-slate-100 rounded-lg px-4 py-2 text-sm focus:outline-none focus:ring focus:ring-emerald-200"
+          />
+        </div>
+        <div class="flex flex-wrap gap-2 text-sm">
+          <button class="filter-btn bg-emerald-600 text-white px-3 py-1 rounded-full" data-filter="all">
+            Semua
+          </button>
+          <button class="filter-btn bg-gray-200 text-gray-700 dark:bg-slate-700 dark:text-slate-100 px-3 py-1 rounded-full" data-filter="snack">
+            Snack
+          </button>
+          <button class="filter-btn bg-gray-200 text-gray-700 dark:bg-slate-700 dark:text-slate-100 px-3 py-1 rounded-full" data-filter="drink">
+            Minuman
+          </button>
+          <button class="filter-btn bg-gray-200 text-gray-700 dark:bg-slate-700 dark:text-slate-100 px-3 py-1 rounded-full" data-filter="package">
+            Paket Hemat
+          </button>
+        </div>
+      </div>
+
+      <div id="productGrid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
+
+        <!-- Produk 1 -->
+        <div class="product-card bg-gray-50 dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-xl p-4 shadow-sm flex flex-col"
+             data-name="keripik pedas level 1"
+             data-category="snack"
+             data-price="5000"
+             data-stock="25">
+          <div class="flex items-center justify-between mb-1">
+            <h3 class="font-semibold text-lg">Keripik Pedas Level 1</h3>
+            <span class="stock-badge text-xs px-2 py-0.5 rounded-full"></span>
+          </div>
+          <img src="images/keripik-pedas.jpg"
+               alt="Keripik Pedas"
+               class="w-full h-40 object-cover mb-3 rounded-md">
+          <p class="text-sm text-gray-600 dark:text-slate-200 mb-2">
+            Keripik singkong rasa pedas ringan, favorit untuk teman ngobrol.
+          </p>
+          <p class="font-bold text-emerald-700 dark:text-lime-300 mb-3">Rp 5.000</p>
+          <button
+            class="mt-auto text-sm bg-emerald-600 text-white py-2 rounded hover:bg-emerald-700 add-to-cart-btn">
+            + Tambah ke Keranjang
+          </button>
+        </div>
+
+        <!-- Produk 2 -->
+        <div class="product-card bg-gray-50 dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-xl p-4 shadow-sm flex flex-col"
+             data-name="mie pedas"
+             data-category="snack"
+             data-price="8000"
+             data-stock="5">
+          <div class="flex items-center justify-between mb-1">
+            <h3 class="font-semibold text-lg">Mie Goreng Pedas Cup</h3>
+            <span class="stock-badge text-xs px-2 py-0.5 rounded-full"></span>
+          </div>
+          <img src="images/mie-cup.jpeg"
+               alt="Mie Goreng Pedas Cup"
+               class="w-full h-40 object-cover mb-3 rounded-md">
+          <p class="text-sm text-gray-600 dark:text-slate-200 mb-2">
+            Langsung seduh, tinggal haaaappppp!
+          </p>
+          <p class="font-bold text-emerald-700 dark:text-lime-300 mb-3">Rp 8.000</p>
+          <button
+            class="mt-auto text-sm bg-emerald-600 text-white py-2 rounded hover:bg-emerald-700 add-to-cart-btn">
+            + Tambah ke Keranjang
+          </button>
+        </div>
+
+        <!-- Produk 3 -->
+        <div class="product-card bg-gray-50 dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-xl p-4 shadow-sm flex flex-col"
+             data-name="roti isi coklat"
+             data-category="snack"
+             data-price="6000"
+             data-stock="0">
+          <div class="flex items-center justify-between mb-1">
+            <h3 class="font-semibold text-lg">Roti Isi Coklat</h3>
+            <span class="stock-badge text-xs px-2 py-0.5 rounded-full"></span>
+          </div>
+          <img src="images/roti-coklat.jpg"
+               alt="Roti Isi Coklat"
+               class="w-full h-40 object-cover mb-3 rounded-md">
+          <p class="text-sm text-gray-600 dark:text-slate-200 mb-2">
+            Roti lembut isi coklat, cocok untuk sarapan atau ngemil ringan.
+          </p>
+          <p class="font-bold text-emerald-700 dark:text-lime-300 mb-3">Rp 6.000</p>
+          <button
+            class="mt-auto text-sm bg-emerald-600 text-white py-2 rounded hover:bg-emerald-700 add-to-cart-btn">
+            + Tambah ke Keranjang
+          </button>
+        </div>
+
+        <!-- Produk 4 -->
+        <div class="product-card bg-gray-50 dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-xl p-4 shadow-sm flex flex-col"
+             data-name="snack ring keju"
+             data-category="snack"
+             data-price="3000"
+             data-stock="12">
+          <div class="flex items-center justify-between mb-1">
+            <h3 class="font-semibold text-lg">Snack Ring Keju</h3>
+            <span class="stock-badge text-xs px-2 py-0.5 rounded-full"></span>
+          </div>
+          <img src="images/snack-ring.jpg"
+               alt="Snack Ring"
+               class="w-full h-40 object-cover mb-3 rounded-md">
+          <p class="text-sm text-gray-600 dark:text-slate-200 mb-2">
+            Snack renyah berbentuk cincin dengan rasa keju gurih.
+          </p>
+          <p class="font-bold text-emerald-700 dark:text-lime-300 mb-3">Rp 3.000</p>
+          <button
+            class="mt-auto text-sm bg-emerald-600 text-white py-2 rounded hover:bg-emerald-700 add-to-cart-btn">
+            + Tambah ke Keranjang
+          </button>
+        </div>
+
+        <!-- Produk 5 -->
+        <div class="product-card bg-gray-50 dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-xl p-4 shadow-sm flex flex-col"
+             data-name="jus jeruk segar"
+             data-category="drink"
+             data-price="7000"
+             data-stock="3">
+          <div class="flex items-center justify-between mb-1">
+            <h3 class="font-semibold text-lg">Jus Jeruk Segar</h3>
+            <span class="stock-badge text-xs px-2 py-0.5 rounded-full"></span>
+          </div>
+          <img src="images/jus-jeruk.png"
+               alt="Jus Jeruk"
+               class="w-full h-40 object-cover mb-3 rounded-md">
+          <p class="text-sm text-gray-600 dark:text-slate-200 mb-2">
+            Minuman sehat dengan rasa jeruk segar, tanpa pemanis berlebihan.
+          </p>
+          <p class="font-bold text-emerald-700 dark:text-lime-300 mb-3">Rp 7.000</p>
+          <button
+            class="mt-auto text-sm bg-emerald-600 text-white py-2 rounded hover:bg-emerald-700 add-to-cart-btn">
+            + Tambah ke Keranjang
+          </button>
+        </div>
+
+        <!-- Produk 6 (Paket Hemat) -->
+        <div class="product-card bg-gray-50 dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-xl p-4 shadow-sm flex flex-col"
+             data-name="paket hemat istirahat"
+             data-category="package"
+             data-price="10000"
+             data-stock="9">
+          <div class="flex items-center justify-between mb-1">
+            <h3 class="font-semibold text-lg">Paket Hemat Istirahat</h3>
+            <span class="stock-badge text-xs px-2 py-0.5 rounded-full"></span>
+          </div>
+          <img src="images/paket-hemat.png"
+               alt="Paket Hemat"
+               class="w-full h-40 object-cover mb-3 rounded-md">
+          <p class="text-sm text-gray-600 dark:text-slate-200 mb-2">
+            Keripik + Minuman Kotak, hemat untuk teman nongkrong.
+          </p>
+          <p class="font-bold text-emerald-700 dark:text-lime-300 mb-3">Rp 10.000</p>
+          <button
+            class="mt-auto text-sm bg-emerald-600 text-white py-2 rounded hover:bg-emerald-700 add-to-cart-btn">
+            + Tambah ke Keranjang
+          </button>
+        </div>
+
+      </div>
+
+      <!-- Load more / infinite scroll sederhana -->
+      <div class="mt-8 text-center">
+        <button id="loadMoreBtn"
+                class="px-4 py-2 text-sm rounded-full border border-emerald-600 text-emerald-700 dark:border-lime-300 dark:text-lime-300 hover:bg-emerald-50 dark:hover:bg-slate-800">
+          Tampilkan Lebih Banyak
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Cara Pesan -->
+  <section id="cara-pesan" class="py-14 bg-emerald-50 dark:bg-slate-900">
+    <div class="max-w-5xl mx-auto px-4">
+      <h2 class="text-3xl font-bold text-center mb-6">Cara Pesan di BDP Mart</h2>
+      <div class="grid md:grid-cols-3 gap-6 mt-6">
+        <div class="bg-white dark:bg-slate-800 rounded-xl p-5 shadow-sm text-center">
+          <div class="text-emerald-700 dark:text-lime-300 font-extrabold text-2xl mb-2">1</div>
+          <h3 class="font-semibold mb-1">Pilih Snack & Minuman</h3>
+          <p class="text-sm text-gray-600 dark:text-slate-200">
+            Gunakan fitur pencarian dan filter untuk menemukan produk yang diinginkan,
+            lalu tambahkan ke keranjang.
+          </p>
+        </div>
+        <div class="bg-white dark:bg-slate-800 rounded-xl p-5 shadow-sm text-center">
+          <div class="text-emerald-700 dark:text-lime-300 font-extrabold text-2xl mb-2">2</div>
+          <h3 class="font-semibold mb-1">Cek Keranjang & Metode</h3>
+          <p class="text-sm text-gray-600 dark:text-slate-200">
+            Buka keranjang untuk melihat ringkasan pesanan dan total belanja,
+            lalu pilih metode pengambilan: ambil langsung atau antar ke kelas.
+          </p>
+        </div>
+        <div class="bg-white dark:bg-slate-800 rounded-xl p-5 shadow-sm text-center">
+          <div class="text-emerald-700 dark:text-lime-300 font-extrabold text-2xl mb-2">3</div>
+          <h3 class="font-semibold mb-1">Bayar & Tunjukkan Resi</h3>
+          <p class="text-sm text-gray-600 dark:text-slate-200">
+            Buat resi &amp; QR Code internal, bayar via Saweria, lalu tunjukkan bukti ke petugas BDP Mart.
+          </p>
+        </div>
+      </div>
+
+      <!-- Alur Lengkap Belanja Online -->
+      <div class="mt-10 bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-2xl p-5 shadow-sm">
+        <h3 class="text-lg font-semibold mb-3 text-center">
+          Alur Lengkap Belanja Online di BDP Mart
+        </h3>
+        <ol class="list-decimal list-inside text-sm text-gray-700 dark:text-slate-200 space-y-2">
+          <li>
+            <strong>Pilih produk dan masukkan ke keranjang.</strong><br>
+            Pilih snack dan minuman yang diinginkan, lalu klik tombol
+            <em>“+ Tambah ke Keranjang”</em>. Pastikan semua produk yang ingin dibeli sudah masuk ke keranjang.
+          </li>
+          <li>
+            <strong>Buka keranjang dan pilih metode pengambilan.</strong><br>
+            Klik tombol <em>“Keranjang”</em>, cek kembali daftar pesanan dan jumlah harganya,
+            lalu pilih salah satu:
+            <em>“Ambil langsung di BDP Mart (gratis)”</em> atau
+            <em>“Antar ke kelas/ruangan (+ Rp 2.000)”</em>.
+            Total Bayar akan menyesuaikan dengan pilihan Anda.
+          </li>
+          <li>
+            <strong>Buat resi &amp; QR Code internal.</strong><br>
+            Scroll ke bagian <em>“Pembayaran Online via Saweria”</em>,
+            pastikan <em>“Total Belanja (dari Keranjang)”</em> sudah benar, lalu klik tombol
+            <em>“Buat Resi &amp; QR Code Internal”</em>.
+            Sistem akan menampilkan ringkasan pesanan, metode pengambilan, total bayar, dan QR Code internal.
+          </li>
+          <li>
+            <strong>Screenshot resi &amp; QR Code.</strong><br>
+            Screenshot tampilan resi dan QR Code tersebut, lalu simpan sebagai bukti.
+            Resi ini akan dicek oleh petugas BDP Mart saat pesanan diambil atau diantar.
+          </li>
+          <li>
+            <strong>Lakukan pembayaran via Saweria.</strong><br>
+            Klik tombol <em>“Bayar Sekarang via Saweria”</em> dan lakukan pembayaran.
+            Pastikan nominal yang dibayar di Saweria <u>sama persis</u> dengan
+            <em>Total Bayar</em> pada resi/QR yang sudah dibuat.
+            Di kolom pesan, tuliskan nama, kelas/ruangan, metode (ambil/antar), dan ringkasan pesanan.
+          </li>
+          <li>
+            <strong>Tunjukkan bukti ke BDP Mart.</strong><br>
+            Tunjukkan screenshot resi + QR Code internal dan bukti pembayaran Saweria kepada petugas BDP Mart.
+            Jika memilih antar, tunggu pesanan diantar ke kelas; jika memilih ambil sendiri, datang ke BDP Mart saat jam operasional.
+          </li>
+        </ol>
+        <p class="mt-3 text-xs text-gray-500 dark:text-slate-400">
+          Pastikan <strong>nominal pembayaran</strong> di Saweria sama dengan
+          <strong>Total Bayar</strong> yang tertera pada resi/QR sebelum mengkonfirmasi pesanan ke BDP Mart.
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Pembayaran Saweria -->
+  <section id="pembayaran" class="py-14 bg-white dark:bg-slate-900">
+    <div class="max-w-4xl mx-auto px-4 text-center">
+      <h2 class="text-3xl font-bold mb-4">Pembayaran Online via Saweria</h2>
+      <p class="text-sm text-gray-600 dark:text-slate-200 mb-4">
+        Pembayaran dilakukan melalui platform Saweria menggunakan QRIS, e-wallet,
+        atau metode lain yang tersedia.  
+        Isi <strong>Nama</strong>, <strong>Nominal Total</strong>, dan <strong>Pesan</strong> (isi pesanan Anda).
+      </p>
+      <p class="text-xs text-gray-500 dark:text-slate-300 mb-6">
+        Jika Anda memilih layanan <strong>antar ke kelas</strong>, sistem akan menambahkan biaya pengantaran sebesar
+        <strong>Rp 2.000</strong> ke total belanja Anda.
+      </p>
+
+      <div class="bg-gray-50 dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-2xl p-6 shadow-sm inline-block text-left w-full max-w-xl">
+        <p class="text-sm mb-2"><strong>Nama Toko:</strong> BDP Mart SMK Taruna Pekanbaru</p>
+        <p class="text-sm mb-4"><strong>Metode Pembayaran:</strong> QRIS, e-Wallet, Virtual Account</p>
+        <p class="text-xs text-gray-500 dark:text-slate-300 mb-4">
+          Cocokkan nominal pembayaran dengan total yang tertera di keranjang Anda.
+        </p>
+
+        <!-- Total dari Keranjang (informasi saja) -->
+        <p class="text-sm mb-2">
+          <strong>Total Belanja (dari Keranjang):</strong>
+          <span id="cartTotalDisplay">Rp 0</span>
+        </p>
+
+        <!-- LINK SAWERIA -->
+        <a href="https://saweria.co/bdpmart"
+           target="_blank"
+           class="block text-center bg-emerald-600 text-white font-semibold px-6 py-3 rounded-lg hover:bg-emerald-700 mt-3">
+          Bayar Sekarang via Saweria
+        </a>
+
+        <button id="generateReceiptBtn"
+                type="button"
+                class="mt-4 w-full text-sm border border-emerald-600 text-emerald-700 dark:border-lime-300 dark:text-lime-300 px-4 py-2 rounded-lg hover:bg-emerald-50 dark:hover:bg-slate-700">
+          Buat Resi &amp; QR Code Internal
+        </button>
+
+        <p class="mt-2 text-[11px] text-gray-500 dark:text-slate-300">
+          Setelah resi &amp; QR Code muncul, silakan <strong>screenshoot</strong> tampilan tersebut,
+          lalu lanjutkan pembayaran di Saweria dengan nominal yang <u>sama persis</u> seperti
+          <em>Total Bayar</em> pada resi. Simpan kedua bukti (resi + pembayaran Saweria)
+          untuk ditunjukkan ke petugas BDP Mart.
+        </p>
+      </div>
+
+      <p class="mt-4 text-xs text-gray-500 dark:text-slate-300">
+        *Di sisi sistem, akun Saweria dilindungi dengan fitur Two-Factor Authentication (2FA)
+        dan autentikator tambahan untuk keamanan login dan penarikan dana.
+      </p>
+
+      <!-- Area QR Code Resi -->
+      <div id="receiptInfo"
+           class="mt-6 max-w-4xl mx-auto px-4 py-4 border border-dashed border-gray-300 dark:border-slate-600 rounded-2xl hidden">
+        <h3 class="text-sm font-semibold mb-2">
+          Resi Internal BDP Mart (Untuk Admin / Kasir)
+        </h3>
+        <div class="flex flex-col md:flex-row md:items-start gap-4">
+          <div class="flex-1 text-xs text-gray-700 dark:text-slate-200" id="receiptText">
+            <!-- info ringkasan pesanan akan diisi via JS -->
+          </div>
+          <div class="w-40 h-40 flex items-center justify-center bg-white dark:bg-slate-900 border border-gray-200 dark:border-slate-700 rounded-xl">
+            <div id="qrcode"></div>
+          </div>
+        </div>
+        <p class="mt-2 text-[10px] text-gray-500 dark:text-slate-400">
+          QR ini hanya untuk keperluan internal (verifikasi cepat di kasir) dan tidak menggantikan bukti pembayaran dari Saweria.
+        </p>
+        <button id="printReceiptBtn"
+                type="button"
+                class="mt-3 text-xs px-3 py-1 rounded border border-emerald-600 text-emerald-700 dark:border-lime-300 dark:text-lime-300 hover:bg-emerald-50 dark:hover:bg-slate-800">
+          Cetak / Download Resi
+        </button>
+      </div>
+    </div>
+  </section>
+
+  <!-- Riwayat Pesanan (LocalStorage) -->
+  <section id="riwayat" class="py-14 bg-white dark:bg-slate-900">
+    <div class="max-w-5xl mx-auto px-4">
+      <h2 class="text-3xl font-bold mb-2 text-center">Riwayat Pesanan</h2>
+      <p class="text-sm text-gray-600 dark:text-slate-300 text-center mb-6">
+        Riwayat pesanan ini disimpan secara lokal di browser menggunakan <em>localStorage</em>.
+        Data hanya terlihat di perangkat ini.
+      </p>
+
+      <div id="historyList" class="space-y-3 text-sm">
+        <!-- item riwayat akan di-render via JavaScript -->
+      </div>
+
+      <div class="mt-4 text-right">
+        <button id="clearHistoryBtn"
+                class="text-xs px-3 py-1 rounded border border-red-500 text-red-600 hover:bg-red-50 dark:hover:bg-slate-800">
+          Hapus Semua Riwayat
+        </button>
+      </div>
+
+      <p class="mt-2 text-[10px] text-gray-500 dark:text-slate-400">
+        Catatan: Riwayat ini hanya simulasi untuk tugas Analisis &amp; Perancangan Sistem Informasi,
+        tidak terhubung langsung dengan database server.
+      </p>
+    </div>
+  </section>
+
+  <!-- Keamanan Sistem -->
+  <section id="keamanan" class="py-14 bg-emerald-50 dark:bg-slate-900">
+    <div class="max-w-5xl mx-auto px-4">
+      <h2 class="text-3xl font-bold text-center mb-4">Keamanan Sistem Pembayaran</h2>
+      <p class="text-center text-sm text-gray-600 dark:text-slate-200 max-w-2xl mx-auto mb-10">
+        Untuk memastikan transaksi aman, akun Saweria BDP Mart dilindungi
+        dengan sistem keamanan berlapis menggunakan Two-Factor Authentication (2FA)
+        dan autentikator tambahan. Fitur ini mencegah akses tidak sah pada akun
+        pembayaran, terutama saat login admin dan penarikan dana.
+      </p>
+
+      <div class="grid md:grid-cols-3 gap-6">
+
+        <!-- Card 1: 2FA -->
+        <div class="bg-white dark:bg-slate-800 rounded-xl p-6 shadow text-center">
+          <div class="text-emerald-700 dark:text-lime-300 font-extrabold text-4xl mb-3">🔐</div>
+          <h3 class="font-semibold text-lg mb-2">Two-Factor Authentication (2FA)</h3>
+          <p class="text-sm text-gray-600 dark:text-slate-200">
+            Akun pembayaran BDP Mart mewajibkan verifikasi dua langkah untuk login.
+            Bahkan jika password bocor, akun tetap terlindungi dengan kode OTP acak
+            yang selalu berubah setiap 30 detik.
+          </p>
+        </div>
+
+        <!-- Card 2: Google Authenticator -->
+        <div class="bg-white dark:bg-slate-800 rounded-xl p-6 shadow text-center">
+          <div class="text-blue-600 font-extrabold text-4xl mb-3">📱</div>
+          <h3 class="font-semibold text-lg mb-2">Google Authenticator</h3>
+          <p class="text-sm text-gray-600 dark:text-slate-200">
+            Google Authenticator digunakan sebagai autentikator utama.
+            Admin BDP Mart harus memasukkan 6-digit kode OTP setiap kali
+            login ke platform Saweria ataupun melakukan pengaturan keamanan.
+          </p>
+        </div>
+
+        <!-- Card 3: Authy -->
+        <div class="bg-white dark:bg-slate-800 rounded-xl p-6 shadow text-center">
+          <div class="text-purple-600 font-extrabold text-4xl mb-3">🛡️</div>
+          <h3 class="font-semibold text-lg mb-2">Multi Authentication (Authy)</h3>
+          <p class="text-sm text-gray-600 dark:text-slate-200">
+            Sebagai nilai tambah, sistem juga mendukung Authy sebagai autentikator alternatif.
+            Fitur multi-authentication ini memastikan akun tetap aman walaupun satu perangkat hilang
+            atau tidak dapat digunakan.
+          </p>
+        </div>
+
+      </div>
+
+      <p class="mt-10 text-center text-xs text-gray-500 dark:text-slate-300">
+        *Seluruh metode keamanan ini sesuai panduan tugas Analisis &amp; Perancangan Sistem Informasi.
+      </p>
+    </div>
+  </section>
+
+  <!-- Kontak -->
+  <section id="kontak" class="py-14 bg-emerald-900 dark:bg-black text-white">
+    <div class="max-w-4xl mx-auto px-4 text-center">
+      <h2 class="text-3xl font-bold mb-4">Kontak BDP Mart</h2>
+      <p class="text-sm mb-6 text-emerald-100">
+        Untuk konfirmasi pesanan atau kerjasama, hubungi pengelola BDP Mart.
+      </p>
+      <div class="space-y-2 text-sm">
+        <p>📍 Lokasi: Area Market Bisnis Digital SMK Taruna Pekanbaru</p>
+        <p>📱 WhatsApp Admin: 08xx-xxxx-xxxx</p>
+        <p>📸 Instagram: @bdpmart.smk_taruna</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer class="py-5 bg-black text-gray-300 text-center text-xs">
+    <p>&copy; 2025 BDP Mart - SMK Taruna Pekanbaru. Landing Page by Tarigan.</p>
+  </footer>
+
+  <!-- Panel Keranjang Belanja -->
+  <div id="cartPanel"
+       class="fixed right-4 bottom-4 w-80 max-w-full bg-white dark:bg-slate-800 border border-gray-200 dark:border-slate-700 rounded-2xl shadow-xl p-4 text-sm hidden z-50">
+    <div class="flex items-center justify-between mb-2">
+      <h3 class="font-semibold text-gray-800 dark:text-slate-100">Keranjang Belanja</h3>
+      <button id="closeCart" class="text-xs text-gray-500 dark:text-slate-300 hover:text-gray-800 dark:hover:text-white">✕</button>
+    </div>
+    <div id="cartItems" class="max-h-52 overflow-auto mb-3 space-y-2">
+      <p class="text-xs text-gray-500 dark:text-slate-300">Belum ada item di keranjang.</p>
+    </div>
+    <div class="border-t border-gray-200 dark:border-slate-700 pt-2">
+      <!-- Metode pengambilan -->
+      <div class="mb-2">
+        <p class="text-xs font-semibold mb-1">Metode Pengambilan:</p>
+        <div class="flex flex-col gap-1 text-xs">
+          <label class="flex items-center gap-1">
+            <input type="radio" name="deliveryMethod" value="pickup" id="pickupOption"
+                   class="accent-emerald-600" checked>
+            <span>Ambil langsung di BDP Mart (gratis)</span>
+          </label>
+          <label class="flex items-center gap-1">
+            <input type="radio" name="deliveryMethod" value="delivery" id="deliveryOption"
+                   class="accent-emerald-600">
+            <span>Antar ke kelas / ruangan (+ Rp 2.000)</span>
+          </label>
+        </div>
+      </div>
+
+      <!-- Ringkasan biaya -->
+      <div class="flex items-center justify-between mb-1 text-xs">
+        <span>Subtotal:</span>
+        <span id="cartSubtotal">Rp 0</span>
+      </div>
+      <div class="flex items-center justify-between mb-1 text-xs">
+        <span>Biaya antar:</span>
+        <span id="deliveryFeeDisplay">Rp 0</span>
+      </div>
+      <div class="flex items-center justify-between mb-2">
+        <span class="font-semibold">Total Bayar:</span>
+        <span id="cartTotal" class="font-bold text-emerald-700 dark:text-lime-300">Rp 0</span>
+      </div>
+
+      <div class="flex items-center justify-between gap-2">
+        <button id="clearCart"
+                class="flex-1 border border-gray-300 dark:border-slate-600 text-gray-700 dark:text-slate-100 py-1 rounded hover:bg-gray-100 dark:hover:bg-slate-700 text-xs">
+          Hapus Keranjang
+        </button>
+        <a href="#pembayaran"
+           class="flex-1 bg-emerald-600 text-white text-center py-1 rounded hover:bg-emerald-700 text-xs">
+          Lanjut Bayar
+        </a>
+      </div>
+      <p class="mt-2 text-[10px] text-gray-500 dark:text-slate-300">
+        Masukkan nominal sesuai <strong>total bayar</strong> di atas saat melakukan pembayaran di Saweria,
+        lalu tuliskan detail pesanan serta tuliskan keterangan
+        <em>"antar ke kelas"</em> atau <em>"ambil sendiri"</em> pada kolom pesan.
+      </p>
+    </div>
+  </div>
+
+  <!-- Toast Notifikasi -->
+  <div id="toast"
+       class="fixed left-1/2 bottom-24 -translate-x-1/2 bg-emerald-600 text-white text-sm px-4 py-2 rounded-lg shadow-lg opacity-0 translate-y-4 pointer-events-none transition-all duration-300">
+    Item berhasil ditambahkan ke keranjang
+  </div>
+
+  <!-- Library QRCode -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+  <!-- SCRIPT: Theme, Cart, Search+Filter, Countdown, Stock, History & QR + Print -->
+  <script>
+    // ======================
+    // Dark Mode Theme
+    // ======================
+    const themeToggle = document.getElementById('themeToggle');
+
+    function applyTheme(theme) {
+      if (theme === 'dark') {
+        document.documentElement.classList.add('dark');
+        themeToggle.textContent = '☀️';
+      } else {
+        document.documentElement.classList.remove('dark');
+        themeToggle.textContent = '🌙';
+      }
+    }
+
+    const savedTheme = localStorage.getItem('bdpTheme') || 'light';
+    applyTheme(savedTheme);
+
+    themeToggle.addEventListener('click', () => {
+      const newTheme = document.documentElement.classList.contains('dark') ? 'light' : 'dark';
+      localStorage.setItem('bdpTheme', newTheme);
+      applyTheme(newTheme);
+    });
+
+    // Format Rupiah
+    function formatRupiah(angka) {
+      return "Rp " + angka.toLocaleString('id-ID');
+    }
+
+    // Toast Notifikasi
+    const toast = document.getElementById('toast');
+    let toastTimeout;
+    function showToast(message) {
+      toast.textContent = message;
+      toast.classList.remove('opacity-0', 'translate-y-4');
+      toast.classList.add('opacity-100', 'translate-y-0');
+      clearTimeout(toastTimeout);
+      toastTimeout = setTimeout(() => {
+        toast.classList.add('opacity-0', 'translate-y-4');
+        toast.classList.remove('opacity-100', 'translate-y-0');
+      }, 2000);
+    }
+
+    // ======================
+    // Variabel Global & Elemen
+    // ======================
+    let cart = [];
+    const cartButton = document.getElementById('cartButton');
+    const cartPanel = document.getElementById('cartPanel');
+    const closeCart = document.getElementById('closeCart');
+    const cartItemsContainer = document.getElementById('cartItems');
+    const cartTotalEl = document.getElementById('cartTotal');
+    const cartCountEl = document.getElementById('cartCount');
+    const clearCartBtn = document.getElementById('clearCart');
+    const cartTotalDisplay = document.getElementById('cartTotalDisplay');
+
+    const cartSubtotalEl = document.getElementById('cartSubtotal');
+    const deliveryFeeDisplay = document.getElementById('deliveryFeeDisplay');
+    const pickupOption = document.getElementById('pickupOption');
+    const deliveryOption = document.getElementById('deliveryOption');
+
+    const DELIVERY_FEE = 2000;
+    let deliveryMethod = 'pickup'; // 'pickup' atau 'delivery'
+
+    const ORDER_HISTORY_KEY = 'bdpOrderHistory';
+    const generateReceiptBtn = document.getElementById('generateReceiptBtn');
+    const receiptInfoEl = document.getElementById('receiptInfo');
+    const receiptTextEl = document.getElementById('receiptText');
+    const historyListEl = document.getElementById('historyList');
+    const clearHistoryBtn = document.getElementById('clearHistoryBtn');
+    const printReceiptBtn = document.getElementById('printReceiptBtn');
+    let qr; // instance QRCode
+
+    // ======================
+    // Cart LocalStorage
+    // ======================
+    function saveCart() {
+      localStorage.setItem('bdpCart', JSON.stringify(cart));
+      localStorage.setItem('bdpDeliveryMethod', deliveryMethod);
+    }
+
+    function loadCart() {
+      const data = localStorage.getItem('bdpCart');
+      if (data) {
+        try {
+          const parsed = JSON.parse(data);
+          if (Array.isArray(parsed)) {
+            cart = parsed;
+          }
+        } catch (e) {
+          cart = [];
+        }
+      }
+      const savedMethod = localStorage.getItem('bdpDeliveryMethod');
+      if (savedMethod === 'pickup' || savedMethod === 'delivery') {
+        deliveryMethod = savedMethod;
+      }
+    }
+
+    function updateCartUI() {
+      cartItemsContainer.innerHTML = '';
+      if (cart.length === 0) {
+        cartItemsContainer.innerHTML = '<p class="text-xs text-gray-500 dark:text-slate-300">Belum ada item di keranjang.</p>';
+      } else {
+        cart.forEach(item => {
+          const row = document.createElement('div');
+          row.className = 'flex items-start justify-between gap-2';
+          row.innerHTML = `
+            <div>
+              <p class="font-semibold text-xs">${item.name}</p>
+              <p class="text-[11px] text-gray-500 dark:text-slate-300">Qty: ${item.qty} x ${formatRupiah(item.price)}</p>
+            </div>
+            <div class="text-xs font-semibold text-emerald-700 dark:text-lime-300">
+              ${formatRupiah(item.price * item.qty)}
+            </div>
+          `;
+          cartItemsContainer.appendChild(row);
+        });
+      }
+
+      const subtotal = cart.reduce((sum, item) => sum + item.price * item.qty, 0);
+      const totalQty = cart.reduce((sum, item) => sum + item.qty, 0);
+      const deliveryFee = (deliveryMethod === 'delivery' && subtotal > 0) ? DELIVERY_FEE : 0;
+      const total = subtotal + deliveryFee;
+
+      if (cartSubtotalEl) cartSubtotalEl.textContent = formatRupiah(subtotal);
+      if (deliveryFeeDisplay) deliveryFeeDisplay.textContent = formatRupiah(deliveryFee);
+      if (cartTotalEl) cartTotalEl.textContent = formatRupiah(total);
+      if (cartCountEl) cartCountEl.textContent = totalQty;
+      if (cartTotalDisplay) cartTotalDisplay.textContent = formatRupiah(total);
+    }
+
+    function addToCart(name, price) {
+      const existing = cart.find(item => item.name === name);
+      if (existing) {
+        existing.qty += 1;
+      } else {
+        cart.push({ name, price, qty: 1 });
+      }
+      updateCartUI();
+      saveCart();
+      cartPanel.classList.remove('hidden');
+      showToast('Item berhasil ditambahkan ke keranjang');
+    }
+
+    // ======================
+    // Riwayat Pesanan (localStorage)
+    // ======================
+    function loadHistory() {
+      const data = localStorage.getItem(ORDER_HISTORY_KEY);
+      if (!data) return [];
+      try {
+        const parsed = JSON.parse(data);
+        if (Array.isArray(parsed)) return parsed;
+        return [];
+      } catch (e) {
+        return [];
+      }
+    }
+
+    function saveHistory(history) {
+      localStorage.setItem(ORDER_HISTORY_KEY, JSON.stringify(history));
+    }
+
+    function renderHistory() {
+      if (!historyListEl) return;
+      const history = loadHistory();
+      historyListEl.innerHTML = '';
+
+      if (history.length === 0) {
+        historyListEl.innerHTML = '<p class="text-xs text-gray-500 dark:text-slate-300">Belum ada riwayat pesanan.</p>';
+        return;
+      }
+
+      // urutkan terbaru di atas
+      history.sort((a, b) => b.id - a.id);
+
+      history.forEach(order => {
+        const wrapper = document.createElement('div');
+        wrapper.className = 'border border-gray-200 dark:border-slate-700 rounded-xl p-3 bg-gray-50 dark:bg-slate-800';
+
+        const waktu = new Date(order.time);
+        const waktuStr = waktu.toLocaleString('id-ID', {
+          dateStyle: 'short',
+          timeStyle: 'short'
+        });
+
+        const metodeText = order.deliveryMethod === 'delivery'
+          ? 'Antar ke kelas (+Rp 2.000)'
+          : 'Ambil langsung di BDP Mart';
+
+        const itemsText = order.items
+          .map(it => `- ${it.name} (x${it.qty})`)
+          .join('<br>');
+
+        wrapper.innerHTML = `
+          <div class="flex items-center justify-between mb-1">
+            <span class="text-xs font-semibold text-gray-700 dark:text-slate-100">Pesanan #${order.id}</span>
+            <span class="text-[11px] text-gray-500 dark:text-slate-300">${waktuStr}</span>
+          </div>
+          <div class="text-[11px] text-gray-600 dark:text-slate-200 mb-1">
+            ${itemsText || '-'}
+          </div>
+          <div class="text-[11px] text-gray-500 dark:text-slate-300 mb-1">
+            Metode: <strong>${metodeText}</strong>
+          </div>
+          <div class="text-xs font-semibold text-emerald-700 dark:text-lime-300">
+            Total: ${formatRupiah(order.total)}
+          </div>
+        `;
+
+        historyListEl.appendChild(wrapper);
+      });
+    }
+
+    function createOrderFromCart() {
+      const subtotal = cart.reduce((sum, item) => sum + item.price * item.qty, 0);
+      if (subtotal <= 0) {
+        showToast('Keranjang masih kosong, tidak bisa membuat resi');
+        return null;
+      }
+
+      const deliveryFee = (deliveryMethod === 'delivery') ? DELIVERY_FEE : 0;
+      const total = subtotal + deliveryFee;
+
+      const order = {
+        id: Date.now(),
+        time: new Date().toISOString(),
+        items: cart.map(item => ({
+          name: item.name,
+          price: item.price,
+          qty: item.qty
+        })),
+        subtotal,
+        deliveryMethod,
+        deliveryFee,
+        total
+      };
+
+      return order;
+    }
+
+    function showReceipt(order) {
+      if (!receiptInfoEl || !receiptTextEl) return;
+      receiptInfoEl.classList.remove('hidden');
+
+      const waktu = new Date(order.time).toLocaleString('id-ID', {
+        dateStyle: 'short',
+        timeStyle: 'short'
+      });
+
+      const metodeText = order.deliveryMethod === 'delivery'
+        ? 'Antar ke kelas (+Rp 2.000)'
+        : 'Ambil langsung di BDP Mart';
+
+      const itemsText = order.items
+        .map(it => `- ${it.name} (x${it.qty})`)
+        .join('<br>');
+
+      receiptTextEl.innerHTML = `
+        <p class="mb-1"><strong>Toko:</strong> BDP Mart SMK Taruna Pekanbaru</p>
+        <p class="mb-1"><strong>Waktu:</strong> ${waktu}</p>
+        <p class="mb-1"><strong>Metode:</strong> ${metodeText}</p>
+        <p class="mb-1"><strong>Subtotal:</strong> ${formatRupiah(order.subtotal)}</p>
+        <p class="mb-1"><strong>Biaya antar:</strong> ${formatRupiah(order.deliveryFee)}</p>
+        <p class="mb-1"><strong>Total Bayar:</strong> ${formatRupiah(order.total)}</p>
+        <p class="mt-2 mb-1 text-[11px]"><strong>Detail Item:</strong></p>
+        <p class="text-[11px]">${itemsText}</p>
+      `;
+
+      // Generate QR
+      const qrContainer = document.getElementById('qrcode');
+      if (qrContainer) {
+        qrContainer.innerHTML = ''; // reset
+        const payload = {
+          store: 'BDP Mart',
+          time: order.time,
+          method: order.deliveryMethod,
+          total: order.total,
+          items: order.items.map(it => ({
+            n: it.name,
+            q: it.qty,
+            p: it.price
+          }))
+        };
+        qr = new QRCode(qrContainer, {
+          text: JSON.stringify(payload),
+          width: 140,
+          height: 140
+        });
+      }
+    }
+
+    // ======================
+    // Badge Stok
+    // ======================
+    function initStockBadges() {
+      document.querySelectorAll('.product-card').forEach(card => {
+        const stock = parseInt(card.getAttribute('data-stock') || '0', 10);
+        const badge = card.querySelector('.stock-badge');
+        const btn = card.querySelector('.add-to-cart-btn');
+        if (!badge) return;
+
+        if (stock <= 0) {
+          badge.textContent = 'Habis';
+          badge.className = 'stock-badge text-xs px-2 py-0.5 rounded-full bg-red-100 text-red-700';
+          if (btn) {
+            btn.disabled = true;
+            btn.classList.add('opacity-50', 'cursor-not-allowed');
+          }
+        } else if (stock > 0 && stock <= 5) {
+          badge.textContent = 'Hampir Habis';
+          badge.className = 'stock-badge text-xs px-2 py-0.5 rounded-full bg-amber-100 text-amber-700';
+        } else {
+          badge.textContent = 'Tersedia';
+          badge.className = 'stock-badge text-xs px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-700';
+        }
+      });
+    }
+
+    // ======================
+    // Search + Filter + Pagination/Load More
+    // ======================
+    const searchInput = document.getElementById('searchInput');
+    const filterButtons = document.querySelectorAll('.filter-btn');
+    const productCards = Array.from(document.querySelectorAll('.product-card'));
+    const loadMoreBtn = document.getElementById('loadMoreBtn');
+    let currentFilter = 'all';
+    let visibleCount = 3;
+    const pageSize = 3;
+
+    function refreshProducts() {
+      const keyword = searchInput.value.toLowerCase().trim();
+      const matches = [];
+
+      productCards.forEach(card => {
+        const name = card.getAttribute('data-name') || '';
+        const category = card.getAttribute('data-category') || '';
+        const matchKeyword = name.includes(keyword);
+        const matchFilter = currentFilter === 'all' || category === currentFilter;
+
+        if (matchKeyword && matchFilter) {
+          matches.push(card);
+        } else {
+          card.classList.add('hidden');
+        }
+      });
+
+      // Jika tidak ada keyword dan filter "all" -> pakai pagination
+      if (keyword === '' && currentFilter === 'all') {
+        matches.forEach((card, index) => {
+          if (index < visibleCount) {
+            card.classList.remove('hidden');
+          } else {
+            card.classList.add('hidden');
+          }
+        });
+        if (matches.length > visibleCount) {
+          loadMoreBtn.classList.remove('hidden');
+        } else {
+          loadMoreBtn.classList.add('hidden');
+        }
+      } else {
+        // Mode filter/pencarian -> tampilkan semua yang cocok, tidak pakai pagination
+        matches.forEach(card => card.classList.remove('hidden'));
+        loadMoreBtn.classList.add('hidden');
+      }
+    }
+
+    // ======================
+    // Countdown Jam Operasional 07.00–16.00 Senin–Jumat
+    // ======================
+    const statusText = document.getElementById('statusText');
+    const countdownText = document.getElementById('countdownText');
+    const countdownNote = document.getElementById('countdownNote');
+
+    function getNextOpenTime(now) {
+      // 0 = Minggu, 1 = Senin, ... , 6 = Sabtu
+      let day = now.getDay();
+
+      // Jika sekarang hari Sabtu (6) atau Minggu (0) → next Monday 07.00
+      if (day === 0 || day === 6) {
+        const daysToMonday = (1 + 7 - day) % 7 || 1;
+        const next = new Date(now);
+        next.setDate(now.getDate() + daysToMonday);
+        next.setHours(7, 0, 0, 0);
+        return next;
+      }
+
+      // Kalau Senin–Jumat:
+      const next = new Date(now);
+      next.setHours(7, 0, 0, 0);
+
+      if (now < next) {
+        // Belum jam 07.00 hari ini
+        return next;
+      } else {
+        // Sudah lewat 07.00 hari ini → cek apakah masih sebelum 16.00
+        const endToday = new Date(now);
+        endToday.setHours(16, 0, 0, 0);
+        if (now <= endToday) {
+          // Masih dalam jam operasional; next open berikutnya = besok
+          const tomorrow = new Date(now);
+          tomorrow.setDate(now.getDate() + 1);
+          return getNextOpenTime(tomorrow);
+        } else {
+          // Sudah lewat 16.00 → next open = besok (atau Senin berikutnya)
+          const tomorrow = new Date(now);
+          tomorrow.setDate(now.getDate() + 1);
+          return getNextOpenTime(tomorrow);
+        }
+      }
+    }
+
+    function isOpen(now) {
+      const day = now.getDay();
+      if (day < 1 || day > 5) return false; // hanya Senin–Jumat
+
+      const start = new Date(now);
+      start.setHours(7, 0, 0, 0);
+      const end = new Date(now);
+      end.setHours(16, 0, 0, 0);
+
+      return now >= start && now <= end;
+    }
+
+    function updateCountdown() {
+      const now = new Date();
+      const open = isOpen(now);
+
+      const today = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+      const closeToday = new Date(today);
+      closeToday.setHours(16, 0, 0, 0);
+
+      if (open) {
+        statusText.textContent = 'BDP Mart SEDANG BUKA (07.00–16.00 WIB, Senin–Jumat).';
+        countdownNote.textContent = 'Hitung mundur menuju waktu tutup (16.00 WIB) hari ini.';
+        const diffMs = closeToday - now;
+        const diffSec = Math.max(0, Math.floor(diffMs / 1000));
+        const h = String(Math.floor(diffSec / 3600)).padStart(2, '0');
+        const m = String(Math.floor((diffSec % 3600) / 60)).padStart(2, '0');
+        const s = String(diffSec % 60).padStart(2, '0');
+        countdownText.textContent = `${h}:${m}:${s}`;
+      } else {
+        statusText.textContent = 'BDP Mart TUTUP (di luar jam operasional).';
+        countdownNote.textContent = 'Hitung mundur menuju jam buka berikutnya (07.00 WIB, Senin–Jumat).';
+        const nextOpen = getNextOpenTime(now);
+        const diffMs = nextOpen - now;
+        const diffSec = Math.max(0, Math.floor(diffMs / 1000));
+        const h = String(Math.floor(diffSec / 3600)).padStart(2, '0');
+        const m = String(Math.floor((diffSec % 3600) / 60)).padStart(2, '0');
+        const s = String(diffSec % 60).padStart(2, '0');
+        countdownText.textContent = `${h}:${m}:${s}`;
+      }
+    }
+
+    // ======================
+    // Inisialisasi
+    // ======================
+    loadCart();
+
+    // sinkron radio metode pengantaran
+    if (pickupOption && deliveryOption) {
+      if (deliveryMethod === 'delivery') {
+        deliveryOption.checked = true;
+      } else {
+        pickupOption.checked = true;
+      }
+    }
+
+    updateCartUI();
+    initStockBadges();
+    refreshProducts();
+    renderHistory();
+    updateCountdown();
+    setInterval(updateCountdown, 1000);
+
+    // Event tombol tambah ke keranjang
+    document.querySelectorAll('.add-to-cart-btn').forEach(btn => {
+      btn.addEventListener('click', function() {
+        const card = this.closest('.product-card');
+        const name = card.getAttribute('data-name');
+        const price = parseInt(card.getAttribute('data-price'), 10);
+        const stock = parseInt(card.getAttribute('data-stock') || '0', 10);
+        if (stock <= 0) {
+          showToast('Maaf, stok produk ini habis');
+          return;
+        }
+        addToCart(name, price);
+      });
+    });
+
+    // Event cart panel
+    cartButton.addEventListener('click', () => {
+      cartPanel.classList.toggle('hidden');
+    });
+
+    closeCart.addEventListener('click', () => {
+      cartPanel.classList.add('hidden');
+    });
+
+    clearCartBtn.addEventListener('click', () => {
+      cart.length = 0;
+      updateCartUI();
+      saveCart();
+    });
+
+    // Event perubahan metode pengantaran
+    if (pickupOption) {
+      pickupOption.addEventListener('change', () => {
+        if (pickupOption.checked) {
+          deliveryMethod = 'pickup';
+          saveCart();
+          updateCartUI();
+        }
+      });
+    }
+
+    if (deliveryOption) {
+      deliveryOption.addEventListener('change', () => {
+        if (deliveryOption.checked) {
+          deliveryMethod = 'delivery';
+          saveCart();
+          updateCartUI();
+        }
+      });
+    }
+
+    // Search & Filter events
+    searchInput.addEventListener('input', () => {
+      refreshProducts();
+    });
+
+    filterButtons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        filterButtons.forEach(b => b.classList.remove('bg-emerald-600', 'text-white'));
+        filterButtons.forEach(b => b.classList.add('bg-gray-200', 'text-gray-700', 'dark:bg-slate-700', 'dark:text-slate-100'));
+
+        btn.classList.remove('bg-gray-200', 'text-gray-700', 'dark:bg-slate-700', 'dark:text-slate-100');
+        btn.classList.add('bg-emerald-600', 'text-white');
+
+        currentFilter = btn.getAttribute('data-filter');
+        visibleCount = pageSize; // reset ketika ganti filter
+        refreshProducts();
+      });
+    });
+
+    if (loadMoreBtn) {
+      loadMoreBtn.addEventListener('click', () => {
+        visibleCount += pageSize;
+        refreshProducts();
+      });
+    }
+
+    // Event Generate Resi & QR Code
+    if (generateReceiptBtn) {
+      generateReceiptBtn.addEventListener('click', () => {
+        const order = createOrderFromCart();
+        if (!order) return;
+
+        // simpan ke history
+        const history = loadHistory();
+        history.push(order);
+        saveHistory(history);
+
+        // tampilkan resi & QR
+        showReceipt(order);
+        renderHistory();
+        showToast('Resi internal & QR Code berhasil dibuat');
+      });
+    }
+
+    // Event Hapus Riwayat
+    if (clearHistoryBtn) {
+      clearHistoryBtn.addEventListener('click', () => {
+        localStorage.removeItem(ORDER_HISTORY_KEY);
+        renderHistory();
+        showToast('Riwayat pesanan telah dihapus');
+      });
+    }
+
+    // Event Cetak / Download Resi
+    if (printReceiptBtn) {
+      printReceiptBtn.addEventListener('click', () => {
+        if (receiptInfoEl && receiptInfoEl.classList.contains('hidden')) {
+          showToast('Silakan buat resi terlebih dahulu sebelum mencetak');
+          return;
+        }
+        window.print();
+      });
+    }
+  </script>
+
+</body>
+</html>
